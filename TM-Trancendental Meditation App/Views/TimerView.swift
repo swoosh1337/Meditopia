@@ -118,9 +118,9 @@ struct TimerView: View {
                     
                     Spacer()
                 }
-                .padding(.bottom, 100) // Add extra padding at the bottom
+                .padding(.bottom, 100)
             }
-            .background(Color(UIColor.systemBackground))
+            .background(Color(red: 1.0, green: 1.0, blue: 0.9)) // Slightly yellow background
             .navigationBarHidden(true)
         }
         .sheet(isPresented: $showingStreaksView) {
@@ -129,6 +129,8 @@ struct TimerView: View {
         .onReceive(timer) { _ in
             if isTimerRunning && remainingTime > 0 {
                 remainingTime -= 1
+                // Add this print statement for debugging
+                print("Timer tick. remainingTime: \(remainingTime)")
             } else if isTimerRunning && remainingTime == 0 {
                 completeTimer()
             }
@@ -184,6 +186,9 @@ struct TimerView: View {
         }
         isTimerRunning.toggle()
         isEditingTime = false
+        
+        // Add this print statement for debugging
+        print("Timer toggled. isTimerRunning: \(isTimerRunning), remainingTime: \(remainingTime)")
     }
     
     func completeTimer() {

@@ -20,7 +20,7 @@ struct StreaksView: View {
                 }
                 .padding()
             }
-            .background(Color(UIColor.systemBackground))
+            .background(Color(red: 1.0, green: 1.0, blue: 0.9)) // Slightly yellow background
             .navigationBarTitle("Meditation Progress", displayMode: .inline)
             .navigationBarItems(trailing: doneButton)
         }

@@ -34,7 +34,7 @@ struct HeartRateGraph: View {
             }
             .chartXAxis {
                 AxisMarks(values: .automatic(desiredCount: 5)) { value in
-                    if let date = value.as(Date.self) {
+                    if value.as(Date.self) != nil {
                         AxisValueLabel(format: .dateTime.hour().minute())
                     }
                 }
@@ -49,7 +49,7 @@ struct HeartRateGraph: View {
             .chartYScale(domain: 40...120)
         }
         .padding()
-        .background(Color(UIColor.systemBackground))
+        .background(Color(red: 1.0, green: 1.0, blue: 0.9)) // Slightly yellow background
         .cornerRadius(15)
         .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
     }

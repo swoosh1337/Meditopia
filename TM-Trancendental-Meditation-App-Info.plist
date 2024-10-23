@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSAllowsArbitraryLoads</key>
+	<string>The App Needs to load videos from Youtube</string>
+	<key>NSAppTransportSecurity</key>
+	<dict/>
+	<key>YOUTUBE_API_KEY</key>
+	<string>AIzaSyC1S0cCMdJYeAV-SEFktc8qGl-slahlf_k</string>
+</dict>
+</plist>

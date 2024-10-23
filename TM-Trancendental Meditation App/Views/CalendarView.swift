@@ -33,6 +33,7 @@ struct CalendarView: View {
                         )
                     } else {
                         Color.clear
+                            .frame(height: 30) // Match the height of CalendarDay
                     }
                 }
             }
@@ -49,8 +50,16 @@ struct CalendarView: View {
         let firstWeekday = calendar.component(.weekday, from: monthInterval.start)
         let leadingEmptyDays = (firstWeekday - calendar.firstWeekday + 7) % 7
         
-        return (0..<leadingEmptyDays).map { _ in nil } +
-               (1...days).map { day in calendar.date(byAdding: .day, value: day - 1, to: monthInterval.start) }
+        let totalDays = leadingEmptyDays + days
+        let totalCells = ((totalDays - 1) / 7 + 1) * 7
+        
+        return (0..<totalCells).map { index in
+            if index < leadingEmptyDays || index >= leadingEmptyDays + days {
+                return nil
+            } else {
+                return calendar.date(byAdding: .day, value: index - leadingEmptyDays, to: monthInterval.start)
+            }
+        }
     }
     
     private func monthYearString(from date: Date) -> String {

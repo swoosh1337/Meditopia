@@ -1,0 +1,13 @@
+# Configuration files
+Configuration/*.xcconfig
+Config.swift
+
+# Xcode
+*.xcuserstate
+project.xcworkspace/
+xcuserdata/
+
+# Other common ignores
+.DS_Store
+build/
+DerivedData/
