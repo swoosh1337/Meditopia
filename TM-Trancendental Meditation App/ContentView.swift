@@ -20,7 +20,7 @@ struct ContentView: View {
                 }
                 .tag(0)
             
-            Text("Library")
+            LibraryView()
                 .tabItem {
                     Image(systemName: "book")
                     Text("Library")
@@ -42,6 +42,7 @@ struct ContentView: View {
                 .tag(3)
         }
         .background(Color(red: 1.0, green: 1.0, blue: 0.9)) // Slightly yellow background
+        .accentColor(Color(red: 0.9, green: 0.8, blue: 0.3)) // Yellowish accent color for selected items
         .edgesIgnoringSafeArea(.all)
     }
 }
