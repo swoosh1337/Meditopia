@@ -9,44 +9,37 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
-    @State private var selectedTab = 0
-    
     var body: some View {
-        TabView(selection: $selectedTab) {
+        TabView {
             TimerView()
                 .tabItem {
                     Image(systemName: "timer")
-                    Text("Timer")
+                    Text("Meditate")
                 }
-                .tag(0)
             
             LibraryView()
                 .tabItem {
-                    Image(systemName: "book")
+                    Image(systemName: "video")
                     Text("Library")
                 }
-                .tag(1)
             
-            Text("Events")
+            JournalView()
                 .tabItem {
-                    Image(systemName: "calendar")
-                    Text("Events")
+                    Image(systemName: "book")
+                    Text("Journal")
                 }
-                .tag(2)
             
-            Text("Profile")
+            ProfileView()
                 .tabItem {
                     Image(systemName: "person")
                     Text("Profile")
                 }
-                .tag(3)
         }
-        .background(Color(red: 1.0, green: 1.0, blue: 0.9)) // Slightly yellow background
-        .accentColor(Color(red: 0.9, green: 0.8, blue: 0.3)) // Yellowish accent color for selected items
+        .accentColor(.yellow)
+        .background(Configuration.backgroundColor)
         .edgesIgnoringSafeArea(.all)
     }
 }
-
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

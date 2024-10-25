@@ -30,7 +30,7 @@ struct LibraryView: View {
                     .padding()
                 }
             }
-            .background(Color(red: 1.0, green: 1.0, blue: 0.9))
+            .background(Configuration.backgroundColor)
             .navigationTitle("Meditation Library")
             .sheet(item: $viewModel.selectedVideo) { video in
                 WebView(url: video.videoURL)
@@ -50,4 +50,3 @@ struct LibraryView_Previews: PreviewProvider {
         LibraryView()
     }
 }
-

@@ -23,6 +23,8 @@ struct TimerView: View {
     @State private var isEditingTime = false
     @State private var showHeartRateGraph = false
     @State private var showingStreaksView = false
+    @State private var showJournalPrompt = false
+    @State private var showNewJournalEntry = false
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     let availableDurations = [1, 10, 15, 20] // Available durations in minutes
@@ -120,7 +122,7 @@ struct TimerView: View {
                 }
                 .padding(.bottom, 100)
             }
-            .background(Color(red: 1.0, green: 1.0, blue: 0.9)) // Slightly yellow background
+            .background(Configuration.backgroundColor)
             .navigationBarHidden(true)
         }
         .sheet(isPresented: $showingStreaksView) {
@@ -156,6 +158,17 @@ struct TimerView: View {
                     resetTimer()
                 }
             )
+        }
+        .alert("Would you like to journal about your meditation?", isPresented: $showJournalPrompt) {
+            Button("Yes") {
+                showNewJournalEntry = true
+            }
+            Button("No", role: .cancel) {
+                resetTimer()
+            }
+        }
+        .sheet(isPresented: $showNewJournalEntry) {
+            NewJournalEntryView(meditationDuration: timerDuration)
         }
     }
     
@@ -201,8 +214,8 @@ struct TimerView: View {
         // Update total meditation time
         totalMeditationTime += timerDuration
         
-        showCompletionAlert = true
         showHeartRateGraph = true
+        showJournalPrompt = true
     }
     
     func resetTimer() {

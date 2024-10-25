@@ -1,4 +1,6 @@
 import Foundation
+import SwiftUICore
+import SwiftUI
 
 enum Configuration {
     static let youtubeApiKey: String = {
@@ -7,4 +9,6 @@ enum Configuration {
         }
         return apiKey
     }()
+
+    static let backgroundColor = Color(red: 1.0, green: 1.0, blue: 0.9)
 }
