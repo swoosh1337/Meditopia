@@ -6,43 +6,40 @@
 //
 
 import SwiftUI
-import CoreData
+import SwiftData
 
 struct ContentView: View {
+    @Environment(\.modelContext) private var modelContext
+
     var body: some View {
         TabView {
             TimerView()
                 .tabItem {
-                    Image(systemName: "timer")
-                    Text("Meditate")
+                    Label("Meditate", systemImage: "timer")
                 }
-            
+
             LibraryView()
                 .tabItem {
-                    Image(systemName: "video")
-                    Text("Library")
+                    Label("Library", systemImage: "books.vertical")
                 }
             
             JournalView()
                 .tabItem {
-                    Image(systemName: "book")
-                    Text("Journal")
+                    Label("Journal", systemImage: "book")
                 }
             
-            ProfileView()
+            StreaksView()
                 .tabItem {
-                    Image(systemName: "person")
-                    Text("Profile")
+                    Label("Streaks", systemImage: "flame")
                 }
         }
         .accentColor(.yellow)
-        .background(Configuration.backgroundColor)
-        .edgesIgnoringSafeArea(.all)
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .modelContainer(for: JournalEntry.self, inMemory: true)
     }
 }

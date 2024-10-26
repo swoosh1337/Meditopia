@@ -125,9 +125,9 @@ struct TimerView: View {
             .background(Configuration.backgroundColor)
             .navigationBarHidden(true)
         }
-        .sheet(isPresented: $showingStreaksView) {
-            StreaksView()
-        }
+        // .sheet(isPresented: $showingStreaksView) {
+        //     StreaksView()
+        // }
         .onReceive(timer) { _ in
             if isTimerRunning && remainingTime > 0 {
                 remainingTime -= 1

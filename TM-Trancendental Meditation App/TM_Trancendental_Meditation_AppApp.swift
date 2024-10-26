@@ -10,22 +10,10 @@ import SwiftData
 
 @main
 struct TM_Trancendental_Meditation_AppApp: App {
-    let container: ModelContainer
-    
-    init() {
-        do {
-            let schema = Schema([JournalEntry.self])
-            let modelConfiguration = ModelConfiguration("JournalDatabase", schema: schema)
-            container = try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Failed to create ModelContainer: \(error)")
-        }
-    }
-    
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(container)
+        .modelContainer(for: JournalEntry.self)
     }
 }
