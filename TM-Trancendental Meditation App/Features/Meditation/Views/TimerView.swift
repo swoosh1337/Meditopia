@@ -71,17 +71,48 @@ struct TimerView: View {
                         
                         VStack {
                             if isEditingTime {
-                                Picker("Duration", selection: $selectedMinutes) {
-                                    ForEach(availableDurations, id: \.self) { duration in
-                                        Text("\(duration) min").tag(duration)
+                                ZStack {
+                                    // Background circle
+                                    Circle()
+                                        .stroke(Color.yellow.opacity(0.1), lineWidth: 2)
+                                        .frame(width: 200, height: 200)  // Made smaller
+                                    
+                                    // Center text
+                                    Text("Select\nDuration")
+                                        .multilineTextAlignment(.center)
+                                        .font(.system(size: 16, weight: .medium))
+                                        .foregroundColor(.gray)
+                                    
+                                    // Time selection buttons
+                                    ForEach(availableDurations.indices, id: \.self) { index in
+                                        let angle = Double(index) * (360.0 / Double(availableDurations.count))
+                                        let duration = availableDurations[index]
+                                        
+                                        Button(action: {
+                                            selectedMinutes = duration
+                                            timerDuration = Double(duration * 60)
+                                            remainingTime = timerDuration
+                                            isEditingTime = false
+                                        }) {
+                                            ZStack {
+                                                Circle()
+                                                    .fill(selectedMinutes == duration ? Color.yellow : Color.yellow.opacity(0.2))
+                                                    .frame(width: 60, height: 60)  // Made smaller
+                                                
+                                                VStack(spacing: 2) {
+                                                    Text("\(duration)")
+                                                        .font(.system(size: 20, weight: .bold))  // Adjusted size
+                                                    Text("min")
+                                                        .font(.system(size: 10))  // Adjusted size
+                                                }
+                                                .foregroundColor(selectedMinutes == duration ? .white : .yellow)
+                                            }
+                                        }
+                                        .offset(
+                                            x: 75 * cos(angle * .pi / 180),  // Reduced offset
+                                            y: 75 * sin(angle * .pi / 180)   // Reduced offset
+                                        )
                                     }
-                                }
-                                .pickerStyle(WheelPickerStyle())
-                                .frame(width: 100, height: 100)
-                                .clipped()
-                                .onChange(of: selectedMinutes) { oldValue, newValue in
-                                    timerDuration = Double(newValue * 60)
-                                    remainingTime = timerDuration
                                 }
                             } else {
                                 Text(timeString(from: Int(remainingTime)))

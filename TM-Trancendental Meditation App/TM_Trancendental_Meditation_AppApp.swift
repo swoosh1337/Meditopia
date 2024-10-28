@@ -27,9 +27,9 @@ struct TM_Trancendental_Meditation_AppApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SplashScreen()
+                .modelContainer(container)
         }
-        .modelContainer(container)
     }
 }
 
