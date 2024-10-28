@@ -5,23 +5,40 @@ class StreaksViewModel: ObservableObject {
     @Published var selectedDate: Date = Date()
     
     private let calendar = Calendar.current
+    private let defaults = UserDefaults.standard
     
     init() {
         self.streakData = StreakData.empty
         loadData()
+        
+        // Observe UserDefaults changes
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(defaultsChanged),
+            name: UserDefaults.didChangeNotification,
+            object: nil
+        )
+    }
+    
+    @objc private func defaultsChanged() {
+        DispatchQueue.main.async {
+            self.loadData()
+        }
     }
     
     func loadData() {
-        let currentStreak = UserDefaults.standard.integer(forKey: "currentStreak")
-        let bestStreak = UserDefaults.standard.integer(forKey: "bestStreak")
-        let totalMeditationTime = UserDefaults.standard.double(forKey: "totalMeditationTime")
+        let currentStreak = defaults.integer(forKey: "currentStreak")
+        let bestStreak = defaults.integer(forKey: "bestStreak")
+        let totalMeditationTime = defaults.double(forKey: "totalMeditationTime")
         
-        if let dates = UserDefaults.standard.array(forKey: "meditationDates") as? [Date] {
+        if let dates = defaults.array(forKey: "meditationDates") as? [Date] {
             let meditationDates = Set(dates.map { calendar.startOfDay(for: $0) })
-            streakData = StreakData(currentStreak: currentStreak,
-                                    bestStreak: bestStreak,
-                                    meditationDates: meditationDates,
-                                    totalMeditationTime: totalMeditationTime)
+            streakData = StreakData(
+                currentStreak: currentStreak,
+                bestStreak: bestStreak,
+                meditationDates: meditationDates,
+                totalMeditationTime: totalMeditationTime
+            )
         }
     }
     
@@ -68,5 +85,9 @@ class StreaksViewModel: ObservableObject {
         } else {
             return "\(minutes) min"
         }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }

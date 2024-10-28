@@ -41,7 +41,7 @@ struct LibraryView: View {
             if viewModel.videos.isEmpty {
                 viewModel.fetchVideos()
             }
-        }
+        }.background(Configuration.backgroundColor)
     }
 }
 

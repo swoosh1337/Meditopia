@@ -8,10 +8,10 @@ final class JournalEntry {
     var meditationDuration: TimeInterval
     var date: Date
     
-    init(content: String, meditationDuration: TimeInterval) {
-        self.id = UUID()
+    init(id: UUID = UUID(), content: String, meditationDuration: TimeInterval, date: Date = Date()) {
+        self.id = id
         self.content = content
         self.meditationDuration = meditationDuration
-        self.date = Date()
+        self.date = date
     }
 }

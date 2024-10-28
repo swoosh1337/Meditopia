@@ -59,11 +59,17 @@ struct NewJournalEntryView: View {
         do {
             try modelContext.save()
             print("Successfully saved modelContext")
+            
+            // Debug: Try to fetch entries after saving
+            let descriptor = FetchDescriptor<JournalEntry>(sortBy: [SortDescriptor(\.date, order: .reverse)])
+            let count = try modelContext.fetch(descriptor).count
+            print("Number of entries after save: \(count)")
+            
+            dismiss()
         } catch {
             print("Failed to save entry: \(error)")
             print("Error details: \(error.localizedDescription)")
         }
-        dismiss()
     }
 }
 

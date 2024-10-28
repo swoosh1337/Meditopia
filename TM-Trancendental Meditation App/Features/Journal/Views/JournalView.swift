@@ -3,7 +3,13 @@ import SwiftData
 
 struct JournalView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \JournalEntry.date, order: .reverse) private var entries: [JournalEntry]
+    @Query(
+        sort: \JournalEntry.date,
+        order: .reverse,
+        animation: .default
+    ) private var entries: [JournalEntry]
+    
+    @State private var showingNewEntry = false
     
     var body: some View {
         NavigationView {
@@ -27,17 +33,35 @@ struct JournalView: View {
                 }
             }
             .navigationTitle("Journal")
-            .onAppear {
-                print("JournalView appeared")
-                print("Number of entries: \(entries.count)")
-                
-                // Log the entries for debugging
-                entries.forEach { entry in
-                    print("Entry: \(entry.content), Date: \(entry.date)")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: { showingNewEntry = true }) {
+                        Image(systemName: "plus")
+                    }
                 }
             }
         }
-        .accentColor(.yellow)
+        .sheet(isPresented: $showingNewEntry) {
+            NewJournalEntryView(meditationDuration: 1200)
+        }
+        .onAppear {
+            print("JournalView appeared")
+            print("Number of entries: \(entries.count)")
+            
+            // Debug: Print all entries
+            entries.forEach { entry in
+                print("Entry: \(entry.content), Date: \(entry.date)")
+            }
+            
+            // Debug: Try to fetch entries manually
+            do {
+                let descriptor = FetchDescriptor<JournalEntry>(sortBy: [SortDescriptor(\.date, order: .reverse)])
+                let manualFetch = try modelContext.fetch(descriptor)
+                print("Manual fetch count: \(manualFetch.count)")
+            } catch {
+                print("Manual fetch error: \(error)")
+            }
+        }
     }
     
     private func deleteEntries(offsets: IndexSet) {

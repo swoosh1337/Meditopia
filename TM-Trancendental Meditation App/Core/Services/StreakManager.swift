@@ -1,49 +1,53 @@
 import Foundation
 
 class StreakManager {
+    private static let defaults = UserDefaults.standard
     
     static func updateStreaks() {
-        let defaults = UserDefaults.standard
         let today = Calendar.current.startOfDay(for: Date())
-        var meditationDates = defaults.array(forKey: "meditationDates") as? [Date] ?? []
-        var sessionsToday = defaults.integer(forKey: "sessionsToday")
+        let sessionCount = defaults.integer(forKey: "dailySessionCount")
         
-        if !meditationDates.contains(today) {
-            meditationDates.append(today)
-            defaults.set(meditationDates, forKey: "meditationDates")
-        }
-        
-        sessionsToday += 1
-        defaults.set(sessionsToday, forKey: "sessionsToday")
-        
-        if sessionsToday == 2 {
-            var currentStreak = defaults.integer(forKey: "currentStreak")
-            currentStreak += 1
-            defaults.set(currentStreak, forKey: "currentStreak")
-            
-            let bestStreak = defaults.integer(forKey: "bestStreak")
-            if currentStreak > bestStreak {
-                defaults.set(currentStreak, forKey: "bestStreak")
+        // Only update streak when exactly reaching 2 sessions
+        if sessionCount == 2 {
+            // Add today to meditation dates if not already there
+            var meditationDates = defaults.array(forKey: "meditationDates") as? [Date] ?? []
+            if !meditationDates.contains(where: { Calendar.current.isDate($0, inSameDayAs: today) }) {
+                meditationDates.append(today)
+                defaults.set(meditationDates, forKey: "meditationDates")
+                
+                // Increment streak
+                var currentStreak = defaults.integer(forKey: "currentStreak")
+                currentStreak += 1
+                defaults.set(currentStreak, forKey: "currentStreak")
+                
+                // Update best streak if needed
+                let bestStreak = defaults.integer(forKey: "bestStreak")
+                if currentStreak > bestStreak {
+                    defaults.set(currentStreak, forKey: "bestStreak")
+                }
             }
-            
-            // Reset sessions for the next day
-            defaults.set(0, forKey: "sessionsToday")
         }
     }
 
     static func checkAndResetStreak() {
-        let defaults = UserDefaults.standard
-        let today = Calendar.current.startOfDay(for: Date())
-        let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today)!
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let yesterday = calendar.date(byAdding: .day, value: -1, to: today)!
+        
         let meditationDates = defaults.array(forKey: "meditationDates") as? [Date] ?? []
         
-        if !meditationDates.contains(yesterday) && !meditationDates.contains(today) {
-            defaults.set(0, forKey: "currentStreak")
+        // Check if yesterday had 2 sessions
+        let hadYesterdaySession = meditationDates.contains { date in
+            calendar.isDate(date, inSameDayAs: yesterday)
         }
         
-        // Reset sessions if it's a new day
-        if !meditationDates.contains(today) {
-            defaults.set(0, forKey: "sessionsToday")
+        // Reset streak if yesterday was missed
+        if !hadYesterdaySession {
+            defaults.set(0, forKey: "currentStreak")
         }
+    }
+    
+    static func resetDailyProgress() {
+        defaults.set(0, forKey: "dailySessionCount")
     }
 }

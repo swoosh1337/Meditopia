@@ -25,6 +25,7 @@ struct TimerView: View {
     @State private var showingStreaksView = false
     @State private var showJournalPrompt = false
     @State private var showNewJournalEntry = false
+    @State private var selectedMinutes: Int = 20  // Add this new state
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     let availableDurations = [1, 10, 15, 20] // Available durations in minutes
@@ -35,6 +36,7 @@ struct TimerView: View {
         _timerDuration = State(initialValue: initialDuration)
         _remainingTime = State(initialValue: initialDuration)
         _sessionCount = State(initialValue: UserDefaults.standard.integer(forKey: "dailySessionCount"))
+        _selectedMinutes = State(initialValue: Int(initialDuration / 60))  // Add this
     }
     
     var body: some View {
@@ -69,14 +71,18 @@ struct TimerView: View {
                         
                         VStack {
                             if isEditingTime {
-                                Picker("Duration", selection: $timerDuration) {
+                                Picker("Duration", selection: $selectedMinutes) {
                                     ForEach(availableDurations, id: \.self) { duration in
-                                        Text("\(duration) min").tag(Double(duration * 60))
+                                        Text("\(duration) min").tag(duration)
                                     }
                                 }
                                 .pickerStyle(WheelPickerStyle())
                                 .frame(width: 100, height: 100)
                                 .clipped()
+                                .onChange(of: selectedMinutes) { oldValue, newValue in
+                                    timerDuration = Double(newValue * 60)
+                                    remainingTime = timerDuration
+                                }
                             } else {
                                 Text(timeString(from: Int(remainingTime)))
                                     .font(.system(size: 40, weight: .bold))
@@ -131,13 +137,12 @@ struct TimerView: View {
         .onReceive(timer) { _ in
             if isTimerRunning && remainingTime > 0 {
                 remainingTime -= 1
-                // Add this print statement for debugging
                 print("Timer tick. remainingTime: \(remainingTime)")
             } else if isTimerRunning && remainingTime == 0 {
                 completeTimer()
             }
         }
-        .onChange(of: timerDuration) { newValue in
+        .onChange(of: timerDuration) { oldValue, newValue in
             if !isTimerRunning {
                 remainingTime = newValue
                 UserDefaults.standard.set(newValue, forKey: "timerDuration")
@@ -146,6 +151,7 @@ struct TimerView: View {
         .onAppear {
             healthKitManager.setupHealthKit()
             resetSessionCountIfNeeded()
+            StreakManager.checkAndResetStreak()  // Add this line
             #if targetEnvironment(simulator)
             showHeartRateGraph = true
             #endif
@@ -191,7 +197,7 @@ struct TimerView: View {
     
     func toggleTimer() {
         if !isTimerRunning {
-            remainingTime = timerDuration
+            remainingTime = timerDuration  // This will now have the correct value
             healthKitManager.startHeartRateMonitoring()
             showHeartRateGraph = true
         } else {
@@ -200,7 +206,6 @@ struct TimerView: View {
         isTimerRunning.toggle()
         isEditingTime = false
         
-        // Add this print statement for debugging
         print("Timer toggled. isTimerRunning: \(isTimerRunning), remainingTime: \(remainingTime)")
     }
     
