@@ -14,7 +14,7 @@ struct CalendarView: View {
                 }
                 Spacer()
                 Text(monthYearString(from: currentDate))
-                    .font(.headline)
+                    .font(.subheadline)
                     .foregroundColor(.gray)
                 Spacer()
                 Button(action: nextMonth) {

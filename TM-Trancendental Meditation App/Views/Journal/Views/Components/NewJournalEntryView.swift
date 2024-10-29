@@ -13,13 +13,22 @@ struct NewJournalEntryView: View {
                 Configuration.backgroundColor.edgesIgnoringSafeArea(.all)
                 
                 VStack {
-                    ZStack {
+                    ZStack(alignment: .topLeading) {
                         Configuration.backgroundColor
+                        
+                        if journalContent.isEmpty {
+                            Text("Write about your meditation experience...")
+                                .foregroundColor(Configuration.secondaryTextColor)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 12)
+                        }
                         
                         TextEditor(text: $journalContent)
                             .padding(4)
                             .background(Color.clear)
-                            .foregroundColor(.black)
+                            .foregroundColor(Configuration.textColor)
+                            .frame(minHeight: 200)
+                            .scrollContentBackground(.hidden)
                     }
                     .cornerRadius(12)
                     .overlay(
@@ -36,11 +45,13 @@ struct NewJournalEntryView: View {
                     Button("Cancel") {
                         dismiss()
                     }
+                    .foregroundColor(.yellow)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
                         saveEntry()
                     }
+                    .foregroundColor(.yellow)
                     .disabled(journalContent.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
@@ -63,6 +74,13 @@ struct NewJournalEntryView: View {
 
 struct NewJournalEntryView_Previews: PreviewProvider {
     static var previews: some View {
-        NewJournalEntryView(meditationDuration: nil)
+        Group {
+            NewJournalEntryView(meditationDuration: nil)
+                .previewDisplayName("Light Mode")
+            
+            NewJournalEntryView(meditationDuration: nil)
+                .preferredColorScheme(.dark)
+                .previewDisplayName("Dark Mode")
+        }
     }
 }

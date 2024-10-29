@@ -36,7 +36,7 @@ struct StreaksView: View {
     private var weeklyProgressView: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("This Week's Progress")
-                .font(.headline)
+                .font(.subheadline)
                 .foregroundColor(.gray)
             
             HStack(spacing: 8) {
@@ -61,15 +61,15 @@ struct StreaksView: View {
     private var totalMeditationTimeView: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Total Meditation Time")
-                .font(.headline)
+                .font(.subheadline)
                 .foregroundColor(.gray)
             
             HStack {
                 Image(systemName: "hourglass")
                     .foregroundColor(.yellow)
                 Text(viewModel.formatTotalTime(viewModel.streakData.totalMeditationTime))
-                    .font(.title2)
-                    .fontWeight(.bold)
+                    .font(.headline)
+                    .fontWeight(.light)
                     .foregroundColor(.gray)
             }
         }

@@ -8,5 +8,12 @@
 	<dict/>
 	<key>YOUTUBE_API_KEY</key>
 	<string>AIzaSyC1S0cCMdJYeAV-SEFktc8qGl-slahlf_k</string>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>LaunchScreenBackground</string>
+		<key>UIImageName</key>
+		<string>LaunchScreenImage</string>
+	</dict>
 </dict>
 </plist>

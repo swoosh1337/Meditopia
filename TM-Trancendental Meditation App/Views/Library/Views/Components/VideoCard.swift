@@ -42,3 +42,24 @@ struct VideoCard: View {
         .cornerRadius(15)
     }
 }
+
+#Preview {
+    let sampleVideo = Video(
+        id: "sample123",
+        title: "15-Minute Guided Meditation for Beginners",
+        thumbnailURL: "https://i.ytimg.com/vi/sample123/maxresdefault.jpg",
+        channelTitle: "Meditation Channel",
+        publishedAt: "2024-10-23",
+        description: "A gentle introduction to meditation practice. Perfect for beginners who want to start their meditation journey. This session includes basic breathing techniques and mindfulness exercises."
+    )
+    
+    return Group {
+        VideoCard(video: sampleVideo)
+            .padding()
+            .previewLayout(.sizeThatFits)
+            .previewDisplayName("Light Mode")
+    
+    }
+}
+
+

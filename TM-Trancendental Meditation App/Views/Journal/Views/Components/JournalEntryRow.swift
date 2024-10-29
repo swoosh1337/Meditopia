@@ -7,22 +7,22 @@ struct JournalEntryRow: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(entry.date.formatted(date: .abbreviated, time: .shortened))
                 .font(.subheadline)
-                .foregroundColor(.secondary)
+                .foregroundColor(Configuration.secondaryTextColor)
             
             Text(entry.content)
                 .lineLimit(2)
                 .font(.body)
-                .foregroundColor(.primary)
+                .foregroundColor(Configuration.textColor)
             
-            if let duration = entry.meditationDuration {  // Only show duration if it exists
+            if let duration = entry.meditationDuration {
                 Text("\(Int(duration / 60)) min meditation")
                     .font(.caption)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(Configuration.secondaryTextColor)
             }
         }
         .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Configuration.backgroundColor.opacity(0.5))
+        .background(Configuration.cardBackgroundColor)
         .cornerRadius(10)
         .overlay(
             RoundedRectangle(cornerRadius: 10)

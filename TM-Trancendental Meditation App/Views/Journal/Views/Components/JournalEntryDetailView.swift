@@ -16,26 +16,26 @@ struct JournalEntryDetailView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     Text(entry.date.formatted(date: .long, time: .shortened))
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(Configuration.secondaryTextColor)
                     
                     if isEditing {
                         TextEditor(text: $editedContent)
                             .font(.body)
-                            .foregroundColor(.primary)
+                            .foregroundColor(Configuration.textColor)
                             .frame(minHeight: 200)
                             .padding(4)
-                            .background(Color.white)
+                            .background(Configuration.backgroundColor)
                             .cornerRadius(8)
                     } else {
                         Text(entry.content)
                             .font(.body)
-                            .foregroundColor(.primary)
+                            .foregroundColor(Configuration.textColor)
                     }
                     
                     if let duration = entry.meditationDuration {
                         Text("\(Int(duration / 60)) minute meditation session")
                             .font(.caption)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(Configuration.secondaryTextColor)
                     }
                 }
                 .padding()

@@ -34,12 +34,22 @@ struct ContentView: View {
                 }
         }
         .accentColor(.yellow)
+        .colorScheme(.light)
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
-            .modelContainer(for: JournalEntry.self, inMemory: true)
+        Group {
+            ContentView()
+                .modelContainer(for: JournalEntry.self, inMemory: true)
+                .preferredColorScheme(.light)
+                .previewDisplayName("Light Mode")
+            
+            ContentView()
+                .modelContainer(for: JournalEntry.self, inMemory: true)
+                .preferredColorScheme(.dark)
+                .previewDisplayName("Dark Mode")
+        }
     }
 }
