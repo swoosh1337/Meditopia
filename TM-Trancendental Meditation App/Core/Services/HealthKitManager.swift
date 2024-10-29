@@ -2,12 +2,13 @@ import Foundation
 import HealthKit
 
 class HealthKitManager: ObservableObject {
-    
     let healthStore = HKHealthStore()
     @Published var currentHeartRate: Double = 0
     @Published var heartRatePoints: [(Date, Double)] = []
     
     private var heartRateQuery: HKQuery?
+    private let maxDataPoints = 60 // Store only last 60 readings
+    
     private var isSimulator: Bool {
         #if targetEnvironment(simulator)
         return true
@@ -61,11 +62,17 @@ class HealthKitManager: ObservableObject {
     }
     
     private func processHeartRateSamples(_ samples: [HKQuantitySample]) {
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
             for sample in samples {
                 let heartRate = sample.quantity.doubleValue(for: HKUnit(from: "count/min"))
                 self.currentHeartRate = heartRate
                 self.heartRatePoints.append((sample.startDate, heartRate))
+                
+                // Keep only the last maxDataPoints
+                if self.heartRatePoints.count > self.maxDataPoints {
+                    self.heartRatePoints.removeFirst(self.heartRatePoints.count - self.maxDataPoints)
+                }
             }
         }
     }
@@ -75,11 +82,19 @@ class HealthKitManager: ObservableObject {
             healthStore.stop(query)
             heartRateQuery = nil
         }
+        // Don't clear the data when stopping
+        // heartRatePoints.removeAll() - Remove this line
+    }
+    
+    func clearData() {
+        // New method to explicitly clear data when needed
+        heartRatePoints.removeAll()
+        currentHeartRate = 0
     }
     
     private func generateTestData() {
         let now = Date()
-        for i in 0..<60 {
+        for i in 0..<maxDataPoints {
             let time = now.addingTimeInterval(Double(i * 10))
             let heartRate = Double.random(in: 60...80)
             heartRatePoints.append((time, heartRate))
@@ -93,6 +108,11 @@ class HealthKitManager: ObservableObject {
             let newHeartRate = Double.random(in: 60...80)
             self.currentHeartRate = newHeartRate
             self.heartRatePoints.append((Date(), newHeartRate))
+            
+            // Keep only the last maxDataPoints
+            if self.heartRatePoints.count > self.maxDataPoints {
+                self.heartRatePoints.removeFirst(self.heartRatePoints.count - self.maxDataPoints)
+            }
         }
     }
 }

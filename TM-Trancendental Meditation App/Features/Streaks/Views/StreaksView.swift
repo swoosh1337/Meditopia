@@ -5,17 +5,23 @@ struct StreaksView: View {
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack(spacing: 20) {
-                    streakCards
-                    CalendarView(meditationDates: $viewModel.streakData.meditationDates)
-                    weeklyProgressView
-                    totalMeditationTimeView
+            VStack {
+                Text("Your Progress")
+                    .font(.system(size: 16))
+                    .foregroundColor(.gray)
+                    .padding(.top)
+                
+                ScrollView {
+                    VStack(spacing: 20) {
+                        streakCards
+                        CalendarView(meditationDates: $viewModel.streakData.meditationDates)
+                        weeklyProgressView
+                        totalMeditationTimeView
+                    }
+                    .padding()
                 }
-                .padding()
             }
-            .background(Color(red: 1.0, green: 1.0, blue: 0.9)) // Slightly yellow background
-            .navigationBarTitle("Meditation Progress", displayMode: .inline)
+            .background(Configuration.backgroundColor)
         }
         .onAppear(perform: viewModel.loadData)
     }
@@ -31,7 +37,7 @@ struct StreaksView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("This Week's Progress")
                 .font(.headline)
-                .foregroundColor(.primary)
+                .foregroundColor(.gray)
             
             HStack(spacing: 8) {
                 ForEach(0..<7) { day in
@@ -41,7 +47,7 @@ struct StreaksView: View {
                             .frame(width: 20, height: 20)
                         Text(viewModel.dayAbbreviation(for: day))
                             .font(.caption)
-                            .foregroundColor(.secondary)
+                            .foregroundColor(.gray)
                     }
                 }
             }
@@ -56,7 +62,7 @@ struct StreaksView: View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Total Meditation Time")
                 .font(.headline)
-                .foregroundColor(.primary)
+                .foregroundColor(.gray)
             
             HStack {
                 Image(systemName: "hourglass")
@@ -64,7 +70,7 @@ struct StreaksView: View {
                 Text(viewModel.formatTotalTime(viewModel.streakData.totalMeditationTime))
                     .font(.title2)
                     .fontWeight(.bold)
-                    .foregroundColor(.primary)
+                    .foregroundColor(.gray)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

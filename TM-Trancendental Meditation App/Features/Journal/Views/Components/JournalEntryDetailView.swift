@@ -21,7 +21,7 @@ struct JournalEntryDetailView: View {
                     if isEditing {
                         TextEditor(text: $editedContent)
                             .font(.body)
-                            .foregroundColor(.black)
+                            .foregroundColor(.primary)
                             .frame(minHeight: 200)
                             .padding(4)
                             .background(Color.white)
@@ -29,12 +29,14 @@ struct JournalEntryDetailView: View {
                     } else {
                         Text(entry.content)
                             .font(.body)
-                            .foregroundColor(.black)
+                            .foregroundColor(.primary)
                     }
                     
-                    Text("\(Int(entry.meditationDuration / 60)) minute meditation session")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+                    if let duration = entry.meditationDuration {
+                        Text("\(Int(duration / 60)) minute meditation session")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
                 }
                 .padding()
                 .background(Configuration.backgroundColor)

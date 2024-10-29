@@ -13,25 +13,31 @@ struct LibraryView: View {
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                if viewModel.isLoading {
-                    ProgressView()
-                        .scaleEffect(1.5)
-                        .padding(.top, 50)
-                } else {
-                    LazyVStack(spacing: 20) {
-                        ForEach(viewModel.videos) { video in
-                            VideoCard(video: video)
-                                .onTapGesture {
-                                    viewModel.selectVideo(video)
-                                }
+            VStack {
+                Text("Meditation Resources")
+                    .font(.system(size: 16))
+                    .foregroundColor(.gray)
+                    .padding(.top)
+                
+                ScrollView {
+                    if viewModel.isLoading {
+                        ProgressView()
+                            .scaleEffect(1.5)
+                            .padding(.top, 50)
+                    } else {
+                        LazyVStack(spacing: 20) {
+                            ForEach(viewModel.videos) { video in
+                                VideoCard(video: video)
+                                    .onTapGesture {
+                                        viewModel.selectVideo(video)
+                                    }
+                            }
                         }
+                        .padding()
                     }
-                    .padding()
                 }
             }
             .background(Configuration.backgroundColor)
-            .navigationTitle("Meditation Library")
             .sheet(item: $viewModel.selectedVideo) { video in
                 WebView(url: video.videoURL)
                     .edgesIgnoringSafeArea(.all)
@@ -41,7 +47,7 @@ struct LibraryView: View {
             if viewModel.videos.isEmpty {
                 viewModel.fetchVideos()
             }
-        }.background(Configuration.backgroundColor)
+        }.background(Configuration.backgroundColor).ignoresSafeArea(.all)
     }
 }
 

@@ -5,10 +5,10 @@ import SwiftData
 final class JournalEntry {
     @Attribute(.unique) var id: UUID
     var content: String
-    var meditationDuration: TimeInterval
+    var meditationDuration: TimeInterval?
     var date: Date
     
-    init(id: UUID = UUID(), content: String, meditationDuration: TimeInterval, date: Date = Date()) {
+    init(id: UUID = UUID(), content: String, meditationDuration: TimeInterval? = nil, date: Date = Date()) {
         self.id = id
         self.content = content
         self.meditationDuration = meditationDuration

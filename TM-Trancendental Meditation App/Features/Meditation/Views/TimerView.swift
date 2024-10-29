@@ -26,6 +26,7 @@ struct TimerView: View {
     @State private var showJournalPrompt = false
     @State private var showNewJournalEntry = false
     @State private var selectedMinutes: Int = 20  // Add this new state
+    @State private var showExpandedHeartRate = false
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     let availableDurations = [1, 10, 15, 20] // Available durations in minutes
@@ -151,6 +152,9 @@ struct TimerView: View {
                                 .foregroundColor(.primary)
                             
                             HeartRateGraph(data: healthKitManager.heartRatePoints)
+                                .onTapGesture {
+                                    showExpandedHeartRate = true
+                                }
                         }
                         .padding(.horizontal)
                     }
@@ -207,6 +211,24 @@ struct TimerView: View {
         .sheet(isPresented: $showNewJournalEntry) {
             NewJournalEntryView(meditationDuration: timerDuration)
         }
+        .fullScreenCover(isPresented: $showExpandedHeartRate) {
+            NavigationView {
+                ZStack {
+                    Configuration.backgroundColor
+                        .ignoresSafeArea()
+                    
+                    ScrollView {
+                        HeartRateGraph(
+                            data: healthKitManager.heartRatePoints,
+                            isExpanded: true,
+                            onDismiss: { showExpandedHeartRate = false }
+                        )
+                        .padding()
+                    }
+                }
+                .navigationBarHidden(true)
+            }
+        }
     }
     
     private var streakDisplay: some View {
@@ -228,21 +250,25 @@ struct TimerView: View {
     
     func toggleTimer() {
         if !isTimerRunning {
-            remainingTime = timerDuration  // This will now have the correct value
-            healthKitManager.startHeartRateMonitoring()
-            showHeartRateGraph = true
+            healthKitManager.heartRatePoints.removeAll()
+            remainingTime = timerDuration
+            // Start monitoring with a delay to allow UI to update
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.healthKitManager.startHeartRateMonitoring()
+                self.showHeartRateGraph = true
+            }
         } else {
             healthKitManager.stopHeartRateMonitoring()
         }
         isTimerRunning.toggle()
         isEditingTime = false
-        
-        print("Timer toggled. isTimerRunning: \(isTimerRunning), remainingTime: \(remainingTime)")
     }
     
     func completeTimer() {
         isTimerRunning = false
+        // Stop monitoring but don't hide the graph
         healthKitManager.stopHeartRateMonitoring()
+        
         sendNotification()
         incrementSessionCount()
         StreakManager.updateStreaks()
@@ -250,7 +276,6 @@ struct TimerView: View {
         // Update total meditation time
         totalMeditationTime += timerDuration
         
-        showHeartRateGraph = true
         showJournalPrompt = true
     }
     
@@ -258,6 +283,7 @@ struct TimerView: View {
         isTimerRunning = false
         remainingTime = timerDuration
         isEditingTime = false
+        // Don't reset the heart rate graph here
     }
     
     func timeString(from seconds: Int) -> String {

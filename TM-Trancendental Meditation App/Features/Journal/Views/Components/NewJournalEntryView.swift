@@ -5,7 +5,7 @@ struct NewJournalEntryView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @State private var journalContent: String = ""
-    let meditationDuration: TimeInterval
+    let meditationDuration: TimeInterval?
     
     var body: some View {
         NavigationView {
@@ -49,32 +49,20 @@ struct NewJournalEntryView: View {
     }
     
     private func saveEntry() {
-        print("Starting to save entry...")
         let newEntry = JournalEntry(content: journalContent, meditationDuration: meditationDuration)
-        print("Created new entry with content: \(newEntry.content)")
-        
         modelContext.insert(newEntry)
-        print("Inserted entry into modelContext")
         
         do {
             try modelContext.save()
-            print("Successfully saved modelContext")
-            
-            // Debug: Try to fetch entries after saving
-            let descriptor = FetchDescriptor<JournalEntry>(sortBy: [SortDescriptor(\.date, order: .reverse)])
-            let count = try modelContext.fetch(descriptor).count
-            print("Number of entries after save: \(count)")
-            
             dismiss()
         } catch {
             print("Failed to save entry: \(error)")
-            print("Error details: \(error.localizedDescription)")
         }
     }
 }
 
 struct NewJournalEntryView_Previews: PreviewProvider {
     static var previews: some View {
-        NewJournalEntryView(meditationDuration: 1200) // 20 minutes
+        NewJournalEntryView(meditationDuration: nil)
     }
 }

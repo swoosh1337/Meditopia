@@ -16,23 +16,29 @@ struct JournalView: View {
             ZStack {
                 Configuration.backgroundColor.edgesIgnoringSafeArea(.all)
                 
-                if entries.isEmpty {
-                    Text("No journal entries yet")
+                VStack {
+                    Text("Your Meditation Journey")
+                        .font(.system(size: 16))
                         .foregroundColor(.gray)
-                } else {
-                    ScrollView {
-                        LazyVStack(spacing: 10) {
-                            ForEach(entries) { entry in
-                                NavigationLink(destination: JournalEntryDetailView(entry: entry)) {
-                                    JournalEntryRow(entry: entry)
+                        .padding(.top)
+                    
+                    if entries.isEmpty {
+                        Text("No journal entries yet")
+                            .foregroundColor(.gray)
+                    } else {
+                        ScrollView {
+                            LazyVStack(spacing: 10) {
+                                ForEach(entries) { entry in
+                                    NavigationLink(destination: JournalEntryDetailView(entry: entry)) {
+                                        JournalEntryRow(entry: entry)
+                                    }
                                 }
                             }
+                            .padding()
                         }
-                        .padding()
                     }
                 }
             }
-            .navigationTitle("Journal")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { showingNewEntry = true }) {
@@ -42,25 +48,7 @@ struct JournalView: View {
             }
         }
         .sheet(isPresented: $showingNewEntry) {
-            NewJournalEntryView(meditationDuration: 1200)
-        }
-        .onAppear {
-            print("JournalView appeared")
-            print("Number of entries: \(entries.count)")
-            
-            // Debug: Print all entries
-            entries.forEach { entry in
-                print("Entry: \(entry.content), Date: \(entry.date)")
-            }
-            
-            // Debug: Try to fetch entries manually
-            do {
-                let descriptor = FetchDescriptor<JournalEntry>(sortBy: [SortDescriptor(\.date, order: .reverse)])
-                let manualFetch = try modelContext.fetch(descriptor)
-                print("Manual fetch count: \(manualFetch.count)")
-            } catch {
-                print("Manual fetch error: \(error)")
-            }
+            NewJournalEntryView(meditationDuration: nil)
         }
     }
     
@@ -75,35 +63,6 @@ struct JournalView: View {
                 print("Failed to save after deleting entries: \(error)")
             }
         }
-    }
-}
-
-struct JournalEntryRow: View {
-    let entry: JournalEntry
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(entry.date.formatted(date: .abbreviated, time: .shortened))
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-            
-            Text(entry.content)
-                .lineLimit(2)
-                .font(.body)
-                .foregroundColor(.black)
-            
-            Text("\(Int(entry.meditationDuration / 60)) min meditation")
-                .font(.caption)
-                .foregroundColor(.secondary)
-        }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Configuration.backgroundColor.opacity(0.5))
-        .cornerRadius(10)
-        .overlay(
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(Color.yellow.opacity(0.5), lineWidth: 1)
-        )
     }
 }
 

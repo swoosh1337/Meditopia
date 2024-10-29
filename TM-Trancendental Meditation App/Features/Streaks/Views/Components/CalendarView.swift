@@ -15,6 +15,7 @@ struct CalendarView: View {
                 Spacer()
                 Text(monthYearString(from: currentDate))
                     .font(.headline)
+                    .foregroundColor(.gray)
                 Spacer()
                 Button(action: nextMonth) {
                     Image(systemName: "chevron.right")
