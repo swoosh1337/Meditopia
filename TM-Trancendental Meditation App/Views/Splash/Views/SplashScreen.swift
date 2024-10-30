@@ -31,6 +31,7 @@ struct SplashScreen: View {
                     }
                 }
             }
+            .colorScheme(.light)
             .onAppear {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                     withAnimation {
@@ -42,9 +43,15 @@ struct SplashScreen: View {
     }
 }
 
-
 struct SplashScreen_Previews: PreviewProvider {
     static var previews: some View {
-        SplashScreen()
+        Group {
+            SplashScreen()
+                .previewDisplayName("Light Mode")
+            
+            SplashScreen()
+                .preferredColorScheme(.dark)
+                .previewDisplayName("Dark Mode (will look same as light)")
+        }
     }
 }

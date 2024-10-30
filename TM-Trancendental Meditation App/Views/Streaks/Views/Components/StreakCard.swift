@@ -8,25 +8,38 @@ struct StreakCard: View {
         VStack {
             Text(title)
                 .font(.subheadline)
-                .foregroundColor(.secondary)
+                .foregroundColor(Configuration.secondaryTextColor)
             Text("\(value)")
                 .font(.system(size: 40, weight: .bold))
                 .foregroundColor(.yellow)
         }
         .frame(maxWidth: .infinity)
         .padding()
-        .background(Color.yellow.opacity(0.1))
+        .background(Configuration.cardBackgroundColor)
         .cornerRadius(15)
     }
 }
 
 struct StreakCard_Previews: PreviewProvider {
     static var previews: some View {
-        VStack {
-            StreakCard(title: "Current Streak", value: 5)
-            StreakCard(title: "Best Streak", value: 10)
+        Group {
+            VStack {
+                StreakCard(title: "Current Streak", value: 5)
+                StreakCard(title: "Best Streak", value: 10)
+            }
+            .padding()
+            .background(Configuration.backgroundColor)
+            .previewDisplayName("Light Mode")
+            
+            VStack {
+                StreakCard(title: "Current Streak", value: 5)
+                StreakCard(title: "Best Streak", value: 10)
+            }
+            .padding()
+            .background(Configuration.backgroundColor)
+            .preferredColorScheme(.dark)
+            .previewDisplayName("Dark Mode")
         }
-        .padding()
         .previewLayout(.sizeThatFits)
     }
 }

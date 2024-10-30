@@ -2,18 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSAllowsArbitraryLoads</key>
 	<string>The App Needs to load videos from Youtube</string>
 	<key>NSAppTransportSecurity</key>
 	<dict/>
 	<key>YOUTUBE_API_KEY</key>
 	<string>AIzaSyC1S0cCMdJYeAV-SEFktc8qGl-slahlf_k</string>
-	<key>UILaunchScreen</key>
-	<dict>
-		<key>UIColorName</key>
-		<string>LaunchScreenBackground</string>
-		<key>UIImageName</key>
-		<string>LaunchScreenImage</string>
-	</dict>
 </dict>
 </plist>

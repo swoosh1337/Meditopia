@@ -7,7 +7,7 @@ struct LaunchScreen: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 16) {
-                Image(systemName: "leaf.fill")  // Or your app icon
+                Image(systemName: "leaf.fill")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 80, height: 80)
@@ -18,9 +18,17 @@ struct LaunchScreen: View {
                     .foregroundColor(.gray)
             }
         }
+        .colorScheme(.light)
     }
 }
 
 #Preview {
-    LaunchScreen()
+    Group {
+        LaunchScreen()
+            .previewDisplayName("Light Mode")
+        
+        LaunchScreen()
+            .preferredColorScheme(.dark)
+            .previewDisplayName("Dark Mode (will look same as light)")
+    }
 } 

@@ -2,6 +2,7 @@ import SwiftUI
 import Charts
 
 struct HeartRateGraph: View {
+    @Environment(\.colorScheme) private var colorScheme
     let data: [(Date, Double)]
     var isExpanded: Bool = false
     var onDismiss: (() -> Void)? = nil
@@ -40,11 +41,11 @@ struct HeartRateGraph: View {
                 VStack(alignment: .leading) {
                     Text("Heart Rate")
                         .font(isExpanded ? .title : .headline)
-                        .foregroundColor(.primary)
+                        .foregroundColor(Configuration.textColor)
                     
                     Text("BPM over time")
                         .font(isExpanded ? .title3 : .subheadline)
-                        .foregroundColor(.secondary)
+                        .foregroundColor(Configuration.secondaryTextColor)
                 }
                 
                 Spacer()
@@ -54,7 +55,7 @@ struct HeartRateGraph: View {
                         onDismiss?()
                     }) {
                         Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(.gray)
+                            .foregroundColor(Configuration.secondaryTextColor)
                             .font(.title)
                     }
                     .padding()
@@ -102,23 +103,32 @@ struct HeartRateGraph: View {
                             Text(formatTime(date))
                                 .font(isExpanded ? .caption : .caption2)
                                 .rotationEffect(.degrees(isExpanded ? -45 : 0))
+                                .foregroundColor(Configuration.secondaryTextColor)
                         }
                         AxisTick()
+                            .foregroundStyle(Configuration.secondaryTextColor)
                         AxisGridLine()
+                            .foregroundStyle(Configuration.secondaryTextColor.opacity(0.2))
                     }
                 }
             }
             .chartYAxis {
                 AxisMarks(position: .leading) { value in
-                    AxisValueLabel()
+                    AxisValueLabel {
+                        Text("\(value.as(Double.self)?.formatted() ?? "")")
+                            .foregroundColor(Configuration.secondaryTextColor)
+                    }
+                    AxisTick()
+                        .foregroundStyle(Configuration.secondaryTextColor)
                     AxisGridLine()
+                        .foregroundStyle(Configuration.secondaryTextColor.opacity(0.2))
                 }
             }
             .frame(height: isExpanded ? UIScreen.main.bounds.height * 0.4 : 200)
             .chartYScale(domain: 40...120)
         }
         .padding(isExpanded ? 20 : 16)
-        .background(Color(red: 1.0, green: 1.0, blue: 0.9))
+        .background(Configuration.backgroundColor)
         .cornerRadius(15)
         .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
     }
@@ -132,7 +142,7 @@ struct StatBox: View {
         VStack {
             Text(title)
                 .font(.subheadline)
-                .foregroundColor(.secondary)
+                .foregroundColor(Configuration.secondaryTextColor)
             Text("\(value)")
                 .font(.title2.bold())
                 .foregroundColor(.yellow)
@@ -146,16 +156,29 @@ struct StatBox: View {
 
 struct HeartRateGraph_Previews: PreviewProvider {
     static var previews: some View {
-        HeartRateGraph(data: [
-            (Date().addingTimeInterval(-300), 70),
-            (Date().addingTimeInterval(-240), 72),
-            (Date().addingTimeInterval(-180), 68),
-            (Date().addingTimeInterval(-120), 71),
-            (Date().addingTimeInterval(-60), 73),
-            (Date(), 69)
-        ])
+        Group {
+            HeartRateGraph(data: [
+                (Date().addingTimeInterval(-300), 70),
+                (Date().addingTimeInterval(-240), 72),
+                (Date().addingTimeInterval(-180), 68),
+                (Date().addingTimeInterval(-120), 71),
+                (Date().addingTimeInterval(-60), 73),
+                (Date(), 69)
+            ])
+            .previewDisplayName("Light Mode")
+            
+            HeartRateGraph(data: [
+                (Date().addingTimeInterval(-300), 70),
+                (Date().addingTimeInterval(-240), 72),
+                (Date().addingTimeInterval(-180), 68),
+                (Date().addingTimeInterval(-120), 71),
+                (Date().addingTimeInterval(-60), 73),
+                (Date(), 69)
+            ])
+            .preferredColorScheme(.dark)
+            .previewDisplayName("Dark Mode")
+        }
         .previewLayout(.sizeThatFits)
         .padding()
-        .background(Color(UIColor.systemGroupedBackground))
     }
 }

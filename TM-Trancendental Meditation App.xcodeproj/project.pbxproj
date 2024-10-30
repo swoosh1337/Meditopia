@@ -402,7 +402,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "TM-Trancendental-Meditation-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = TM;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "The App needs to use heart rate data";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "The App needs to display heart rate and other health related data";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -442,7 +442,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "TM-Trancendental-Meditation-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = TM;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "The App needs to use heart rate data";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "The App needs to display heart rate and other health related data";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
