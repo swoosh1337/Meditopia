@@ -48,6 +48,14 @@ struct JournalEntryDetailView: View {
                         Text(entry.content)
                             .font(.body)
                             .foregroundColor(Configuration.textColor)
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Configuration.cardBackgroundColor)
+                            .cornerRadius(10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color.yellow.opacity(0.5), lineWidth: 1)
+                            )
                     }
                     
                     if let duration = entry.meditationDuration {
