@@ -18,10 +18,10 @@ struct ContentView: View {
                     Label("Meditate", systemImage: "timer")
                 }
 
-            LibraryView()
-                .tabItem {
-                    Label("Library", systemImage: "books.vertical")
-                }
+            // LibraryView()
+            //     .tabItem {
+            //         Label("Library", systemImage: "books.vertical")
+            //     }
             
             JournalView()
                 .tabItem {

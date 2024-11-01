@@ -29,7 +29,7 @@ struct TimerView: View {
     @State private var showExpandedHeartRate = false
     
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    let availableDurations = [5, 10, 15, 20] // Available durations in minutes
+    let availableDurations = [1, 10, 15, 20] // Available durations in minutes
     
     init() {
         let savedDuration = UserDefaults.standard.double(forKey: "timerDuration")
