@@ -3,9 +3,12 @@ import SwiftData
 
 struct JournalEntryDetailView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode
     @Bindable var entry: JournalEntry
     @State private var isEditing = false
     @State private var editedContent: String = ""
+    @State private var showingDeleteAlert = false
     
     var body: some View {
         ZStack {
@@ -19,13 +22,28 @@ struct JournalEntryDetailView: View {
                         .foregroundColor(Configuration.secondaryTextColor)
                     
                     if isEditing {
-                        TextEditor(text: $editedContent)
-                            .font(.body)
-                            .foregroundColor(Configuration.textColor)
-                            .frame(minHeight: 200)
-                            .padding(4)
-                            .background(Configuration.backgroundColor)
-                            .cornerRadius(8)
+                        ZStack(alignment: .topLeading) {
+                            Configuration.backgroundColor
+                            
+                            if editedContent.isEmpty {
+                                Text("Write about your meditation experience...")
+                                    .foregroundColor(Configuration.secondaryTextColor)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 12)
+                            }
+                            
+                            TextEditor(text: $editedContent)
+                                .padding(4)
+                                .background(Color.clear)
+                                .foregroundColor(Configuration.textColor)
+                                .frame(minHeight: 200)
+                                .scrollContentBackground(.hidden)
+                        }
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.yellow.opacity(0.5), lineWidth: 1)
+                        )
                     } else {
                         Text(entry.content)
                             .font(.body)
@@ -41,7 +59,6 @@ struct JournalEntryDetailView: View {
                 .padding()
                 .background(Configuration.backgroundColor)
                 .cornerRadius(12)
-                .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
                 .padding()
             }
         }
@@ -49,16 +66,43 @@ struct JournalEntryDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(isEditing ? "Save" : "Edit") {
+                HStack {
                     if isEditing {
-                        saveChanges()
+                        Button("Save") {
+                            saveChanges()
+                            isEditing = false
+                        }
+                        .foregroundColor(.yellow)
+                    } else {
+                        Button("Edit") {
+                            isEditing = true
+                        }
+                        .foregroundColor(.yellow)
                     }
-                    isEditing.toggle()
+                }
+            }
+            
+            ToolbarItem(placement: .navigationBarLeading) {
+                if isEditing {
+                    Button(role: .destructive) {
+                        showingDeleteAlert = true
+                    } label: {
+                        Image(systemName: "trash")
+                            .foregroundColor(.red)
+                    }
                 }
             }
         }
         .onAppear {
             editedContent = entry.content
+        }
+        .alert("Delete Entry", isPresented: $showingDeleteAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Delete", role: .destructive) {
+                deleteEntry()
+            }
+        } message: {
+            Text("Are you sure you want to delete this journal entry? This action cannot be undone.")
         }
     }
     
@@ -68,6 +112,17 @@ struct JournalEntryDetailView: View {
             try modelContext.save()
         } catch {
             print("Error saving changes: \(error)")
+        }
+    }
+    
+    private func deleteEntry() {
+        modelContext.delete(entry)
+        do {
+            try modelContext.save()
+            dismiss()
+            presentationMode.wrappedValue.dismiss()
+        } catch {
+            print("Error deleting entry: \(error)")
         }
     }
 }
