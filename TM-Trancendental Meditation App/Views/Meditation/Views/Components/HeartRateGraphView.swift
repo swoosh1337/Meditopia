@@ -25,6 +25,18 @@ struct HeartRateGraph: View {
         processedData.map { $0.1 }.min() ?? 0
     }
     
+    private var yAxisRange: ClosedRange<Double> {
+        if processedData.isEmpty {
+            return 40...120 // Default range when no data
+        }
+        
+        let min = minHeartRate
+        let max = maxHeartRate
+        let buffer = (max - min) * 0.2 // Add 20% buffer
+        
+        return (min - buffer).rounded(.down)...(max + buffer).rounded(.up)
+    }
+    
     private func formatTime(_ date: Date) -> String {
         let formatter = DateFormatter()
         if isExpanded {
@@ -125,7 +137,7 @@ struct HeartRateGraph: View {
                 }
             }
             .frame(height: isExpanded ? UIScreen.main.bounds.height * 0.4 : 200)
-            .chartYScale(domain: 40...120)
+            .chartYScale(domain: yAxisRange)
         }
         .padding(isExpanded ? 20 : 16)
         .background(Configuration.backgroundColor)
@@ -155,30 +167,56 @@ struct StatBox: View {
 }
 
 struct HeartRateGraph_Previews: PreviewProvider {
+    static func generateTestData(baseRate: Double, variance: Double = 5.0) -> [(Date, Double)] {
+        var data: [(Date, Double)] = []
+        let startTime = Date().addingTimeInterval(-600) // 10 minutes ago
+        
+        for i in 0..<60 {
+            let time = startTime.addingTimeInterval(TimeInterval(i * 10))
+            let randomVariance = Double.random(in: -variance...variance)
+            let heartRate = baseRate + randomVariance
+            data.append((time, heartRate))
+        }
+        return data
+    }
+    
     static var previews: some View {
         Group {
-            HeartRateGraph(data: [
-                (Date().addingTimeInterval(-300), 70),
-                (Date().addingTimeInterval(-240), 72),
-                (Date().addingTimeInterval(-180), 68),
-                (Date().addingTimeInterval(-120), 71),
-                (Date().addingTimeInterval(-60), 73),
-                (Date(), 69)
-            ])
-            .previewDisplayName("Light Mode")
+            // Normal heart rate (60-80 BPM)
+            VStack {
+                HeartRateGraph(data: generateTestData(baseRate: 70))
+                    .padding()
+                Text("Normal Heart Rate (60-80 BPM)")
+                    .font(.caption)
+            }
+            .previewDisplayName("Normal Range")
             
-            HeartRateGraph(data: [
-                (Date().addingTimeInterval(-300), 70),
-                (Date().addingTimeInterval(-240), 72),
-                (Date().addingTimeInterval(-180), 68),
-                (Date().addingTimeInterval(-120), 71),
-                (Date().addingTimeInterval(-60), 73),
-                (Date(), 69)
-            ])
-            .preferredColorScheme(.dark)
-            .previewDisplayName("Dark Mode")
+            // Low heart rate (35-50 BPM)
+            VStack {
+                HeartRateGraph(data: generateTestData(baseRate: 42, variance: 7))
+                    .padding()
+                Text("Low Heart Rate (35-50 BPM)")
+                    .font(.caption)
+            }
+            .previewDisplayName("Low Range")
+            
+            // High heart rate (120-160 BPM)
+            VStack {
+                HeartRateGraph(data: generateTestData(baseRate: 140, variance: 20))
+                    .padding()
+                Text("High Heart Rate (120-160 BPM)")
+                    .font(.caption)
+            }
+            .previewDisplayName("High Range")
+            
+            // Expanded view with widely varying heart rates
+            HeartRateGraph(
+                data: generateTestData(baseRate: 100, variance: 40),
+                isExpanded: true
+            )
+            .previewDisplayName("Expanded View (Varying Rates)")
         }
-        .previewLayout(.sizeThatFits)
         .padding()
+        .background(Configuration.backgroundColor)
     }
 }
