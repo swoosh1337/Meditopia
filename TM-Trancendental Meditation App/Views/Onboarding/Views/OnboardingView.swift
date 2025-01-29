@@ -7,7 +7,7 @@ struct OnboardingView: View {
     let pages: [OnboardingPage] = [
         OnboardingPage(
             image: "leaf.fill",
-            title: "Welcome to TM",
+            title: "Welcome to Meditopia",
             description: "Start your journey to inner peace with Transcendental Meditation"
         ),
         OnboardingPage(

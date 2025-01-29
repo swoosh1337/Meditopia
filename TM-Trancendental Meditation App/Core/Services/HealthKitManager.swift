@@ -82,12 +82,10 @@ class HealthKitManager: ObservableObject {
             healthStore.stop(query)
             heartRateQuery = nil
         }
-        // Don't clear the data when stopping
-        // heartRatePoints.removeAll() - Remove this line
     }
     
     func clearData() {
-        // New method to explicitly clear data when needed
+        // method to explicitly clear data when needed
         heartRatePoints.removeAll()
         currentHeartRate = 0
     }

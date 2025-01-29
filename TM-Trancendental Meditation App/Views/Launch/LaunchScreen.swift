@@ -22,13 +22,9 @@ struct LaunchScreen: View {
     }
 }
 
-#Preview {
+#Preview("Light Mode and Dark Mode") {
     Group {
         LaunchScreen()
-            .previewDisplayName("Light Mode")
-        
-        LaunchScreen()
-            .preferredColorScheme(.dark)
-            .previewDisplayName("Dark Mode (will look same as light)")
+        LaunchScreen().preferredColorScheme(.dark)
     }
 } 

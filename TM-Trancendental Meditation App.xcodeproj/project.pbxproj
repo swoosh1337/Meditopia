@@ -395,13 +395,13 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "TM-Trancendental Meditation App/TM-Trancendental Meditation App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2.1;
 				DEVELOPMENT_ASSET_PATHS = "\"TM-Trancendental Meditation App/Preview Content\"";
 				DEVELOPMENT_TEAM = D52VX5574L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "TM-Trancendental-Meditation-App-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = TM;
+				INFOPLIST_KEY_CFBundleDisplayName = Meditopia;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "The App needs to use heart rate data";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "The App needs to display heart rate and other health related data";
@@ -415,7 +415,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tazeey.TM-Trancendental-Meditation-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -435,13 +435,13 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "TM-Trancendental Meditation App/TM-Trancendental Meditation App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2.1;
 				DEVELOPMENT_ASSET_PATHS = "\"TM-Trancendental Meditation App/Preview Content\"";
 				DEVELOPMENT_TEAM = D52VX5574L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "TM-Trancendental-Meditation-App-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = TM;
+				INFOPLIST_KEY_CFBundleDisplayName = Meditopia;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "The App needs to use heart rate data";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "The App needs to display heart rate and other health related data";
@@ -455,7 +455,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.tazeey.TM-Trancendental-Meditation-App";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
