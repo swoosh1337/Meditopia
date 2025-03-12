@@ -9,4 +9,5 @@ Check out Meditopia in action:
   </tr>
 </table>
 
-https://www.tmapp.app/
+https://meditopia-app-landing-page.vercel.app/
+
