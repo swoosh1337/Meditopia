@@ -26,7 +26,7 @@ struct JournalEntryRow: View {
         .cornerRadius(10)
         .overlay(
             RoundedRectangle(cornerRadius: 10)
-                .stroke(Color.yellow.opacity(0.5), lineWidth: 1)
+                .stroke(Configuration.primaryColor.opacity(0.5), lineWidth: 1)
         )
     }
 } 

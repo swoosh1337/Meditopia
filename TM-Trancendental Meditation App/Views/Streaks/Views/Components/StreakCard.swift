@@ -11,7 +11,7 @@ struct StreakCard: View {
                 .foregroundColor(Configuration.secondaryTextColor)
             Text("\(value)")
                 .font(.system(size: 40, weight: .bold))
-                .foregroundColor(.yellow)
+                .foregroundColor(Configuration.primaryColor)
         }
         .frame(maxWidth: .infinity)
         .padding()
@@ -28,7 +28,7 @@ struct StreakCard_Previews: PreviewProvider {
                 StreakCard(title: "Best Streak", value: 10)
             }
             .padding()
-            .background(Configuration.backgroundColor)
+            .background(Configuration.primaryColor)
             .previewDisplayName("Light Mode")
             
             VStack {
@@ -36,7 +36,7 @@ struct StreakCard_Previews: PreviewProvider {
                 StreakCard(title: "Best Streak", value: 10)
             }
             .padding()
-            .background(Configuration.backgroundColor)
+            .background(Configuration.primaryColor)
             .preferredColorScheme(.dark)
             .previewDisplayName("Dark Mode")
         }

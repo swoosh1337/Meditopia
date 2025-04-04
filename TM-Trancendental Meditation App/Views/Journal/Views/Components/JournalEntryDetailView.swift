@@ -42,7 +42,7 @@ struct JournalEntryDetailView: View {
                         .cornerRadius(12)
                         .overlay(
                             RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.yellow.opacity(0.5), lineWidth: 1)
+                                .stroke(Configuration.primaryColor.opacity(0.5), lineWidth: 1)
                         )
                     } else {
                         Text(entry.content)
@@ -54,7 +54,7 @@ struct JournalEntryDetailView: View {
                             .cornerRadius(10)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Color.yellow.opacity(0.5), lineWidth: 1)
+                                    .stroke(Configuration.primaryColor.opacity(0.5), lineWidth: 1)
                             )
                     }
                     
@@ -80,12 +80,12 @@ struct JournalEntryDetailView: View {
                             saveChanges()
                             isEditing = false
                         }
-                        .foregroundColor(.yellow)
+                        .foregroundColor(Configuration.primaryColor)
                     } else {
                         Button("Edit") {
                             isEditing = true
                         }
-                        .foregroundColor(.yellow)
+                        .foregroundColor(Configuration.primaryColor)
                     }
                 }
             }

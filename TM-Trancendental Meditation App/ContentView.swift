@@ -33,7 +33,7 @@ struct ContentView: View {
                     Label("Streaks", systemImage: "flame")
                 }
         }
-        .accentColor(.yellow)
+        .accentColor(Configuration.primaryColor)
         .colorScheme(.light)
     }
 }

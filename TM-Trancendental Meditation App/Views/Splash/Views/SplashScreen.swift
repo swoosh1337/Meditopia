@@ -21,11 +21,11 @@ struct SplashScreen: View {
                 VStack {
                     Image(systemName: "leaf.fill")
                         .font(.system(size: 80))
-                        .foregroundColor(.yellow)
+                        .foregroundColor(Configuration.primaryColor)
                     
                     Text("Relax Your Mind")
                         .font(.system(size: 40, weight: .bold))
-                        .foregroundColor(.yellow)
+                        .foregroundColor(Configuration.primaryColor)
                 }
                 .scaleEffect(size)
                 .opacity(opacity)

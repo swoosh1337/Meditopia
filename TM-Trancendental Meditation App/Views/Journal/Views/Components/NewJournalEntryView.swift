@@ -33,28 +33,39 @@ struct NewJournalEntryView: View {
                     .cornerRadius(12)
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.yellow.opacity(0.5), lineWidth: 1)
+                            .stroke(Configuration.primaryColor.opacity(0.5), lineWidth: 1)
                     )
                     .padding()
                 }
             }
-            .navigationTitle("New Journal Entry")
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    // Custom title view that uses the app's secondary text color
+                    Text("New Journal Entry")
+                        .font(.headline)
+                        .foregroundColor(Configuration.secondaryTextColor)
+                }
+                
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {
                         dismiss()
                     }
-                    .foregroundColor(.yellow)
+                    .foregroundColor(Configuration.primaryColor)
                 }
+                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
                         saveEntry()
                     }
-                    .foregroundColor(.yellow)
+                    .foregroundColor(Configuration.primaryColor)
+                    .padding(.horizontal, 30)
+                    .padding(.vertical, 10)
+                    // .background(Configuration.primaryColor)
+                    .cornerRadius(20)
                     .disabled(journalContent.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
+            .navigationBarTitleDisplayMode(.inline)
         }
         .accentColor(.yellow)
     }

@@ -8,10 +8,10 @@ struct CalendarDay: View {
     var body: some View {
         ZStack {
             Circle()
-                .stroke(isToday ? Color.yellow : Color.clear, lineWidth: 2)
-                .background(Circle().fill(isMarked ? Color.yellow : Color.clear))
+                .stroke(isToday ? Configuration.primaryColor : Color.clear, lineWidth: 2)
+                .background(Circle().fill(isMarked ? Configuration.primaryColor : Color.clear))
             Text("\(Calendar.current.component(.day, from: date))")
-                .foregroundColor(isMarked ? .white : (isToday ? .yellow : .primary))
+                .foregroundColor(isMarked ? .white : (isToday ? Configuration.primaryColor : .primary))
         }
         .frame(height: 30)
     }

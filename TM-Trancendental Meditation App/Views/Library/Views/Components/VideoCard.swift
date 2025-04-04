@@ -22,6 +22,10 @@ struct VideoCard: View {
             }
             .frame(height: 200)
             .clipShape(RoundedRectangle(cornerRadius: 12))
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Configuration.primaryColor.opacity(0.3), lineWidth: 1)
+            )
             
             Text(video.title)
                 .font(.headline)
@@ -38,12 +42,12 @@ struct VideoCard: View {
                 .lineLimit(3)
         }
         .padding()
-        .background(Color.yellow.opacity(0.1))
+        .background(Configuration.primaryColor.opacity(0.1))
         .cornerRadius(15)
     }
 }
 
-#Preview {
+#Preview("Light Mode") {
     let sampleVideo = Video(
         id: "sample123",
         title: "15-Minute Guided Meditation for Beginners",
@@ -53,13 +57,10 @@ struct VideoCard: View {
         description: "A gentle introduction to meditation practice. Perfect for beginners who want to start their meditation journey. This session includes basic breathing techniques and mindfulness exercises."
     )
     
-    return Group {
-        VideoCard(video: sampleVideo)
-            .padding()
-            .previewLayout(.sizeThatFits)
-            .previewDisplayName("Light Mode")
-    
-    }
+    return VideoCard(video: sampleVideo)
+        .padding()
+        .background(Configuration.backgroundColor)
+        .environment(\.colorScheme, .light)
 }
 
 

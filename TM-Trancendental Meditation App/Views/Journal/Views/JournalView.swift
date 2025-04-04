@@ -42,7 +42,9 @@ struct JournalView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { showingNewEntry = true }) {
-                        Image(systemName: "plus")
+                        Image(systemName: "plus.circle.fill")
+                            .foregroundColor(Configuration.primaryColor)
+                            .font(.title)
                     }
                 }
             }

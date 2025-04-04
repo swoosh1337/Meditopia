@@ -10,7 +10,7 @@ struct CalendarView: View {
             HStack {
                 Button(action: previousMonth) {
                     Image(systemName: "chevron.left")
-                        .foregroundColor(.yellow)
+                        .foregroundColor(Configuration.primaryColor)
                 }
                 Spacer()
                 Text(monthYearString(from: currentDate))
@@ -19,7 +19,7 @@ struct CalendarView: View {
                 Spacer()
                 Button(action: nextMonth) {
                     Image(systemName: "chevron.right")
-                        .foregroundColor(.yellow)
+                        .foregroundColor(Configuration.primaryColor)
                 }
             }
             .padding(.horizontal)
@@ -40,7 +40,7 @@ struct CalendarView: View {
             }
         }
         .padding()
-        .background(Color.yellow.opacity(0.1))
+        .background(Configuration.primaryColor.opacity(0.1))
         .cornerRadius(15)
     }
     

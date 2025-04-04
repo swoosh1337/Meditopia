@@ -7,9 +7,31 @@ struct HeartRateGraph: View {
     var isExpanded: Bool = false
     var onDismiss: (() -> Void)? = nil
     
+    // Memoize the processed data
     private var processedData: [(Date, Double)] {
-        let pointsToShow = isExpanded ? data : Array(data.suffix(30))
-        return pointsToShow
+        if data.isEmpty {
+            return generatePlaceholderData()
+        }
+        
+        // 1. Make a copy of the data
+        var workingData = data
+        
+        // 2. Sort by date
+        workingData.sort { $0.0 < $1.0 }
+        
+        // 3. Take only the needed points
+        let pointsToShow = isExpanded ? workingData : Array(workingData.suffix(min(30, workingData.count)))
+        
+        // 4. Filter out zero or negative values which may be erroneous
+        return pointsToShow.filter { $0.1 > 0 }
+    }
+    
+    private func generatePlaceholderData() -> [(Date, Double)] {
+        let now = Date()
+        // Generate placeholder data when no actual data is available
+        return (0..<10).map { i in
+            (now.addingTimeInterval(Double(-10 + i) * 30), 70.0 + Double.random(in: -5...5))
+        }
     }
     
     private var averageHeartRate: Double {
@@ -27,14 +49,18 @@ struct HeartRateGraph: View {
     
     private var yAxisRange: ClosedRange<Double> {
         if processedData.isEmpty {
-            return 40...120 // Default range when no data
+            return 60...80 // Default range when no data
         }
         
-        let min = minHeartRate
-        let max = maxHeartRate
-        let buffer = (max - min) * 0.2 // Add 20% buffer
+        let min = max(40, minHeartRate - 5) // Ensure minimum is at least 40
+        let max = maxHeartRate + 5 // Add some padding
         
-        return (min - buffer).rounded(.down)...(max + buffer).rounded(.up)
+        // Ensure there's always a reasonable range even with flat data
+        if max - min < 10 {
+            return (min - 5)...(max + 5)
+        }
+        
+        return min...max
     }
     
     private func formatTime(_ date: Date) -> String {
@@ -47,16 +73,22 @@ struct HeartRateGraph: View {
         return formatter.string(from: date)
     }
     
+    private var chartData: [HeartRateDataPoint] {
+        processedData.enumerated().map { index, item in
+            HeartRateDataPoint(id: index, time: item.0, rate: item.1)
+        }
+    }
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: isExpanded ? 20 : 8) {
+        VStack(alignment: .leading, spacing: isExpanded ? 20 : 10) {
             HStack {
                 VStack(alignment: .leading) {
                     Text("Heart Rate")
-                        .font(isExpanded ? .title : .headline)
-                        .foregroundColor(Configuration.textColor)
+                        .font(isExpanded ? .title2.bold() : .headline)
+                        .foregroundColor(Configuration.primaryColor)
                     
                     Text("BPM over time")
-                        .font(isExpanded ? .title3 : .subheadline)
+                        .font(isExpanded ? .subheadline : .caption)
                         .foregroundColor(Configuration.secondaryTextColor)
                 }
                 
@@ -75,37 +107,42 @@ struct HeartRateGraph: View {
             }
             
             if isExpanded {
-                HStack(spacing: 20) {
-                    StatBox(title: "Average", value: Int(averageHeartRate))
-                    StatBox(title: "Maximum", value: Int(maxHeartRate))
-                    StatBox(title: "Minimum", value: Int(minHeartRate))
+                HStack(spacing: 15) {
+                    StatBox(title: "Average", value: Int(averageHeartRate), icon: "heart.text.square")
+                    StatBox(title: "Maximum", value: Int(maxHeartRate), icon: "arrow.up.heart")
+                    StatBox(title: "Minimum", value: Int(minHeartRate), icon: "arrow.down.heart")
                 }
             }
             
-            Chart(processedData, id: \.0) { item in
+            Chart(chartData) { item in
                 AreaMark(
-                    x: .value("Time", item.0),
-                    y: .value("Heart Rate", item.1)
+                    x: .value("Time", item.time),
+                    y: .value("Heart Rate", item.rate)
                 )
+                .interpolationMethod(.catmullRom) // Smoother curves
                 .foregroundStyle(LinearGradient(
-                    gradient: Gradient(colors: [Color.yellow.opacity(0.5), Color.yellow.opacity(0.2)]),
+                    gradient: Gradient(colors: [
+                        Configuration.primaryColor.opacity(0.6),
+                        Configuration.primaryColor.opacity(0.1)
+                    ]),
                     startPoint: .top,
                     endPoint: .bottom
                 ))
                 
                 LineMark(
-                    x: .value("Time", item.0),
-                    y: .value("Heart Rate", item.1)
+                    x: .value("Time", item.time),
+                    y: .value("Heart Rate", item.rate)
                 )
-                .foregroundStyle(Color.yellow)
-                .lineStyle(StrokeStyle(lineWidth: isExpanded ? 3 : 2))
+                .interpolationMethod(.catmullRom) // Smoother curves
+                .foregroundStyle(Configuration.primaryColor)
+                .lineStyle(StrokeStyle(lineWidth: isExpanded ? 2.5 : 2, lineCap: .round, lineJoin: .round))
                 
-                if isExpanded {
+                if isExpanded && chartData.count < 30 {
                     PointMark(
-                        x: .value("Time", item.0),
-                        y: .value("Heart Rate", item.1)
+                        x: .value("Time", item.time),
+                        y: .value("Heart Rate", item.rate)
                     )
-                    .foregroundStyle(Color.yellow)
+                    .foregroundStyle(Configuration.primaryColor)
                 }
             }
             .chartXAxis {
@@ -114,7 +151,7 @@ struct HeartRateGraph: View {
                         AxisValueLabel {
                             Text(formatTime(date))
                                 .font(isExpanded ? .caption : .caption2)
-                                .rotationEffect(.degrees(isExpanded ? -45 : 0))
+                                .rotationEffect(.degrees(isExpanded ? -30 : 0))
                                 .foregroundColor(Configuration.secondaryTextColor)
                         }
                         AxisTick()
@@ -128,6 +165,7 @@ struct HeartRateGraph: View {
                 AxisMarks(position: .leading) { value in
                     AxisValueLabel {
                         Text("\(value.as(Double.self)?.formatted() ?? "")")
+                            .font(isExpanded ? .caption : .caption2)
                             .foregroundColor(Configuration.secondaryTextColor)
                     }
                     AxisTick()
@@ -136,33 +174,55 @@ struct HeartRateGraph: View {
                         .foregroundStyle(Configuration.secondaryTextColor.opacity(0.2))
                 }
             }
-            .frame(height: isExpanded ? UIScreen.main.bounds.height * 0.4 : 200)
+            .frame(height: isExpanded ? 300 : 180)
             .chartYScale(domain: yAxisRange)
+            .animation(.easeInOut, value: chartData.count) // Smooth transitions when data changes
         }
         .padding(isExpanded ? 20 : 16)
-        .background(Configuration.backgroundColor)
+        .background(Configuration.cardBackgroundColor)
         .cornerRadius(15)
-        .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: 5)
+        .shadow(color: Color.black.opacity(0.08), radius: 6, x: 0, y: 3)
     }
+}
+
+// Identifiable data point for ChartView
+struct HeartRateDataPoint: Identifiable {
+    var id: Int
+    var time: Date
+    var rate: Double
 }
 
 struct StatBox: View {
     let title: String
     let value: Int
+    let icon: String
     
     var body: some View {
-        VStack {
-            Text(title)
-                .font(.subheadline)
-                .foregroundColor(Configuration.secondaryTextColor)
+        VStack(spacing: 6) {
+            HStack(spacing: 6) {
+                Image(systemName: icon)
+                    .font(.subheadline)
+                    .foregroundColor(Configuration.primaryColor)
+                
+                Text(title)
+                    .font(.subheadline)
+                    .foregroundColor(Configuration.secondaryTextColor)
+            }
+            
             Text("\(value)")
-                .font(.title2.bold())
-                .foregroundColor(.yellow)
+                .font(.title3.bold())
+                .foregroundColor(Configuration.primaryColor)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 10)
-        .background(Color.yellow.opacity(0.1))
+        .background(Configuration.primaryColor.opacity(0.1))
         .cornerRadius(10)
+    }
+}
+
+extension StatBox {
+    init(title: String, value: Int) {
+        self.init(title: title, value: value, icon: "heart.fill")
     }
 }
 
@@ -215,6 +275,10 @@ struct HeartRateGraph_Previews: PreviewProvider {
                 isExpanded: true
             )
             .previewDisplayName("Expanded View (Varying Rates)")
+            
+            // Empty data test
+            HeartRateGraph(data: [])
+                .previewDisplayName("Empty Data (Shows Placeholder)")
         }
         .padding()
         .background(Configuration.backgroundColor)

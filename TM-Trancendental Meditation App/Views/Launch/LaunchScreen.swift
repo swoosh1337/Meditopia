@@ -11,7 +11,7 @@ struct LaunchScreen: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 80, height: 80)
-                    .foregroundColor(.yellow)
+                    .foregroundColor(Configuration.primaryColor)
                 
                 Text("Relax Your Mind")
                     .font(.title)

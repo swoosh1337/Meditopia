@@ -33,37 +33,41 @@ struct OnboardingView: View {
                     Button("Skip") {
                         completeOnboarding()
                     }
-                    .foregroundColor(.yellow)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(Configuration.primaryColor)
                     .padding()
                 }
                 
                 TabView(selection: $currentPage) {
                     ForEach(pages.indices, id: \.self) { index in
-                        VStack(spacing: 20) {
+                        VStack(spacing: 30) {
                             Image(systemName: pages[index].image)
                                 .font(.system(size: 100))
-                                .foregroundColor(.yellow)
+                                .foregroundColor(Configuration.primaryColor)
                                 .padding()
+                                .shadow(color: Configuration.primaryColor.opacity(0.2), radius: 10, x: 0, y: 5)
                             
                             Text(pages[index].title)
-                                .font(.title)
-                                .bold()
-                                .foregroundColor(Configuration.textColor)
+                                .font(.system(size: 28, weight: .bold))
+                                .foregroundColor(Configuration.primaryColor)
+                                .padding(.bottom, 5)
                             
                             Text(pages[index].description)
-                                .font(.body)
+                                .font(.system(size: 18, weight: .medium))
                                 .multilineTextAlignment(.center)
-                                .foregroundColor(Configuration.secondaryTextColor)
+                                .foregroundColor(Color.black.opacity(0.7))
                                 .padding(.horizontal, 40)
+                                .lineSpacing(4)
                             
                             if index == pages.count - 1 {
                                 Button(action: completeOnboarding) {
                                     Text("Get Started")
-                                        .font(.headline)
+                                        .font(.system(size: 18, weight: .bold))
                                         .foregroundColor(.white)
-                                        .frame(width: 200, height: 50)
-                                        .background(Color.yellow)
-                                        .cornerRadius(25)
+                                        .frame(width: 220, height: 55)
+                                        .background(Configuration.primaryColor)
+                                        .cornerRadius(27.5)
+                                        .shadow(color: Configuration.primaryColor.opacity(0.3), radius: 8, x: 0, y: 4)
                                 }
                                 .padding(.top, 50)
                             }
@@ -76,6 +80,7 @@ struct OnboardingView: View {
                 Spacer()
             }
         }
+        .colorScheme(.light) // Ensure consistent appearance
     }
     
     private func completeOnboarding() {

@@ -43,7 +43,7 @@ struct StreaksView: View {
                 ForEach(0..<7) { day in
                     VStack {
                         Circle()
-                            .fill(viewModel.didMeditateOnDay(day) ? Color.yellow : Color.gray.opacity(0.3))
+                            .fill(viewModel.didMeditateOnDay(day) ? Configuration.primaryColor : Color.gray.opacity(0.3))
                             .frame(width: 20, height: 20)
                         Text(viewModel.dayAbbreviation(for: day))
                             .font(.caption)
@@ -54,7 +54,7 @@ struct StreaksView: View {
             .frame(maxWidth: .infinity)
         }
         .padding()
-        .background(Color.yellow.opacity(0.1))
+        .background(Configuration.primaryColor.opacity(0.1))
         .cornerRadius(15)
     }
     
@@ -66,7 +66,7 @@ struct StreaksView: View {
             
             HStack {
                 Image(systemName: "hourglass")
-                    .foregroundColor(.yellow)
+                    .foregroundColor(Configuration.primaryColor)
                 Text(viewModel.formatTotalTime(viewModel.streakData.totalMeditationTime))
                     .font(.headline)
                     .fontWeight(.light)
@@ -75,7 +75,7 @@ struct StreaksView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
-        .background(Color.yellow.opacity(0.1))
+        .background(Configuration.primaryColor.opacity(0.1))
         .cornerRadius(15)
     }
 }

@@ -8,6 +8,18 @@
 	<string>The App Needs to load videos from Youtube</string>
 	<key>NSAppTransportSecurity</key>
 	<dict/>
+	<key>NSCriticalAlertEntitlement</key>
+	<true/>
+	<key>NSHealthShareUsageDescription</key>
+	<string>We need access to your heart rate data to monitor your meditation sessions and show you real-time heart rate information.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>We need access to your heart rate data to monitor your meditation sessions and show you real-time heart rate information.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+		<string>processing</string>
+		<string>remote-notification</string>
+	</array>
 	<key>YOUTUBE_API_KEY</key>
 	<string>AIzaSyC1S0cCMdJYeAV-SEFktc8qGl-slahlf_k</string>
 </dict>
