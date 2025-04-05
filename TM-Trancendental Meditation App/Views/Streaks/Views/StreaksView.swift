@@ -2,28 +2,69 @@ import SwiftUI
 
 struct StreaksView: View {
     @StateObject private var viewModel = StreaksViewModel()
+    @StateObject private var purchaseManager = PurchaseManager.shared
+    @State private var showPaywall = false
     
     var body: some View {
-        NavigationView {
-            VStack {
-                Text("Your Progress")
-                    .font(.system(size: 16))
-                    .foregroundColor(.gray)
-                    .padding(.top)
-                
-                ScrollView {
-                    VStack(spacing: 20) {
-                        streakCards
-                        CalendarView(meditationDates: $viewModel.streakData.meditationDates)
-                        weeklyProgressView
-                        totalMeditationTimeView
+        Group {
+            if purchaseManager.hasFullAccess {
+                // User has access, show the Streaks view with trial banner
+                NavigationView {
+                    ZStack {
+                        VStack {
+                            ZStack(alignment: .center) {
+                                // Title text positioned to work with the trial banner
+                                Text("Your Progress")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(.gray)
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .padding(.top)
+                            
+                            ScrollView {
+                                VStack(spacing: 20) {
+                                    streakCards
+                                    CalendarView(meditationDates: $viewModel.streakData.meditationDates)
+                                    weeklyProgressView
+                                    totalMeditationTimeView
+                                }
+                                .padding()
+                            }
+                        }
+                        .background(Configuration.backgroundColor)
+                        
+                        // Trial banner only in StreaksView
+                        if purchaseManager.isTrialActive {
+                            VStack {
+                                HStack {
+                                    Spacer()
+                                    TrialBannerView(onUpgradeTapped: {
+                                        showPaywall = true
+                                    })
+                                }
+                                .padding(.trailing, 45)
+                                .padding(.top, 12)
+                                
+                                Spacer()
+                            }
+                        }
                     }
-                    .padding()
+                    .sheet(isPresented: $showPaywall) {
+                        PaywallView(allowDismissal: true)
+                    }
                 }
+                .onAppear(perform: viewModel.loadData)
+            } else {
+                // User does not have access, show paywall with no way to dismiss it
+                PaywallView(allowDismissal: false)
+                    .transition(.opacity)
+                    .zIndex(100) // Ensure it's above all other content
             }
-            .background(Configuration.backgroundColor)
         }
-        .onAppear(perform: viewModel.loadData)
+        .onAppear {
+            // Refresh trial status whenever view appears
+            purchaseManager.checkTrialStatus()
+        }
     }
     
     private var streakCards: some View {

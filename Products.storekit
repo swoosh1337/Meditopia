@@ -1,0 +1,35 @@
+{
+  "identifier" : "F64C42D5",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "6471FA0D",
+      "localizations" : [
+        {
+          "description" : "Unlock all features of the meditation app",
+          "displayName" : "Full App Access",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.yourcompany.meditationapp.fullaccess",
+      "referenceName" : "Full App Access",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "1234567890",
+    "_developerTeamID" : "ABCDE12345",
+    "_lastSynchronizedDate" : 701650111.69696796
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 2,
+    "minor" : 0
+  }
+} 

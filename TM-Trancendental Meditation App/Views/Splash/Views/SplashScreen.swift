@@ -5,6 +5,7 @@ struct SplashScreen: View {
     @State private var size = 0.8
     @State private var opacity = 0.5
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding: Bool = false
+    @StateObject private var purchaseManager = PurchaseManager.shared
     
     var body: some View {
         if isActive {
@@ -38,6 +39,8 @@ struct SplashScreen: View {
             }
             .colorScheme(.light)
             .onAppear {
+                purchaseManager.checkTrialStatus()
+                
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                     withAnimation {
                         self.isActive = true

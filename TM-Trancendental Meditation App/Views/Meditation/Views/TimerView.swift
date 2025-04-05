@@ -264,6 +264,24 @@ struct TimerView: View {
                 .navigationBarHidden(true)
             }
         }
+        .alert("Your Trial is Ending Soon", isPresented: $showTrialEndingAlert) {
+            Button("Upgrade Now") {
+                showPaywall = true
+            }
+            .foregroundColor(.blue)
+            
+            Button("Continue", role: .cancel) {}
+        } message: {
+            if let endDate = purchaseManager.trialEndDate, purchaseManager.isTrialActive {
+                let daysLeft = Calendar.current.dateComponents([.day], from: Date(), to: endDate).day ?? 0
+                Text("You have \(daysLeft) day\(daysLeft == 1 ? "" : "s") left in your trial. Upgrade now to continue your meditation journey without interruption.")
+            } else {
+                Text("Your trial period is ending soon. Upgrade now to continue your meditation journey without interruption.")
+            }
+        }
+        .sheet(isPresented: $showPaywall) {
+            PaywallView(allowDismissal: true)
+        }
     }
     
     // MARK: - State Properties
@@ -275,6 +293,9 @@ struct TimerView: View {
     @State private var startTime: Date?
     @State private var endTime: Date?
     @State private var heartRateStatus: HeartRateStatus = .unknown
+    @State private var showTrialEndingAlert = false
+    @StateObject private var purchaseManager = PurchaseManager.shared
+    @State private var showPaywall = false
     
     enum HeartRateStatus {
         case unknown
@@ -319,6 +340,9 @@ struct TimerView: View {
     // MARK: - Helper Methods
     
     private func setupApp() {
+        // The ViewModel already loads stored duration in its initializer
+        // No need to call a separate method
+        
         // Setup health kit
         viewModel.healthKitManager.setupHealthKit()
         
@@ -338,6 +362,9 @@ struct TimerView: View {
         #if targetEnvironment(simulator)
         viewModel.showHeartRateGraph = true
         #endif
+        
+        // Check trial status
+        checkTrialStatus()
     }
     
     private func setupHeartRateObservers() {
@@ -596,6 +623,17 @@ struct TimerView: View {
     private func setIdleTimerDisabled(_ disabled: Bool) {
         DispatchQueue.main.async {
             UIApplication.shared.isIdleTimerDisabled = disabled
+        }
+    }
+    
+    // MARK: - View Lifecycle
+    private func checkTrialStatus() {
+        // If trial is active but ending within 1-2 days, show alert
+        if let endDate = purchaseManager.trialEndDate, purchaseManager.isTrialActive {
+            let daysLeft = Calendar.current.dateComponents([.day], from: Date(), to: endDate).day ?? 0
+            if daysLeft <= 2 {
+                showTrialEndingAlert = true
+            }
         }
     }
 }

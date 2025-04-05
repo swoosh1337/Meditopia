@@ -10,24 +10,30 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
+    @StateObject private var purchaseManager = PurchaseManager.shared
 
     var body: some View {
         TabView {
-            TimerView()
-                .tabItem {
-                    Label("Meditate", systemImage: "timer")
-                }
-
+            AppContentWrapper {
+                TimerView()
+            }
+            .tabItem {
+                Label("Meditate", systemImage: "timer")
+            }
+            
             // LibraryView()
             //     .tabItem {
             //         Label("Library", systemImage: "books.vertical")
             //     }
             
-            JournalView()
-                .tabItem {
-                    Label("Journal", systemImage: "book")
-                }
+            AppContentWrapper {
+                JournalView()
+            }
+            .tabItem {
+                Label("Journal", systemImage: "book")
+            }
             
+            // StreaksView with built-in purchase access control and trial banner
             StreaksView()
                 .tabItem {
                     Label("Streaks", systemImage: "flame")

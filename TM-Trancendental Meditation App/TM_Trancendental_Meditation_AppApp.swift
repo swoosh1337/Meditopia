@@ -7,10 +7,14 @@
 
 import SwiftUI
 import SwiftData
+import StoreKit
 
 @main
 struct TM_Trancendental_Meditation_AppApp: App {
     let container: ModelContainer
+    
+    // Reference to PurchaseManager to ensure it's initialized early
+    @StateObject private var purchaseManager = PurchaseManager.shared
     
     init() {
         do {
@@ -29,6 +33,15 @@ struct TM_Trancendental_Meditation_AppApp: App {
         WindowGroup {
             SplashScreen()
                 .modelContainer(container)
+                .task {
+                    // Listen for transactions when the app launches
+                    // This ensures we capture transactions that may have been made when the app wasn't running
+                    for await result in StoreKit.Transaction.updates {
+                        if case .verified(let transaction) = result {
+                            await purchaseManager.handleVerifiedTransaction(transaction)
+                        }
+                    }
+                }
         }
     }
 }
